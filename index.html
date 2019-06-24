@@ -10,7 +10,7 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link rel="stylesheet" type="text/css" href="css/public.css?11=2">
-    <link rel="stylesheet" href="css/selfStype.css?239833333e3=23">
+    <link rel="stylesheet" href="css/selfStype.css?4333r4r24=223">
     <!-- 引入样式和js文件 -->
     <link rel="stylesheet" type="text/css" href="css/mobileSelect.css">
     <script src="js/mobileSelect.js" type="text/javascript"></script>
@@ -20,16 +20,33 @@
 <body style="overflow: hidden">
 
 
-<div class="contain" ><!--style="background-image: url('image/backimage2.jpg');background-size: 100% 100%"-->
-    <div class="w750" style="height: 120px;opacity: 0.2"></div>
-    <div class="w750" style="opacity: 0.9">
-        <!--<div class="demo">
-            <div id="trigger1">单项选择</div>
-            <div id="trigger2">双项选择</div>
-            <div id="trigger3">多项选择</div>
-            <div id="trigger4">地区选择-级联</div>
-            <div id="trigger5">车型选择-级联</div>
-        </div>-->
+<div class="contain" style="background-image: url('image/third.jpg');background-size: cover;background-position:center;"><!--style="background-image: url('image/backimage2.jpg');background-size: 100% 100%"-->
+    <div class="w750" style="height: 120px;opacity: 0.2">
+
+        <div class="title">育路通账号分发系统</div>
+    </div>
+
+    <div class="w750 tips" style="opacity: 0.9;">
+
+        <div class="centerStyle"></div>
+
+        <div class="mainContent" style="min-height: 450px;position: relative">
+            <div class="inputTips" style="min-height: 400px">
+                <div class="tipsTitle">
+                使用说明：
+                </div>
+                <div class="tipsContent">
+                1.参测考生输入正确的【城市-学校-班级-姓名】即可获得本次考试测评报告的账号与密码；
+                </div>
+                <div class="tipsContent">
+                2.教科院或高中学校在考号栏输入相应的代码，即可获得该地区或该校测评报告的账号与密码。
+                </div>
+            </div>
+            <div class="readTips">已阅读</div>
+        </div>
+    </div>
+
+    <div class="w750 main" style="opacity: 0.9;display:none">
 
         <div class="centerStyle"></div>
 
@@ -54,15 +71,20 @@
             </div>
             <div class="inputTr">
                 <div class="keyStyle">姓名</div>
-                <input type="text" class="name-input"
+                <input type="text" class="name-input value-input"
                        placeholder="请输入姓名">
             </div>
-            <div class="inputTips">输入考号可获得测评系统的账号与密码</div>
+            <div class="inputTips">【注意:直接输入考号可直接获得测评系统的账号与密码】</div>
+            <div class="inputTr">
+                <div class="keyStyle">考号</div>
+                <input type="text" class="code-input value-input"
+                       placeholder="输入考号">
+            </div>
             <div class="startDone">获取账号信息</div>
 
         </div>
     </div>
-    <div class="w750" style="min-height:300px;opacity: 0.2">
+    <div class="w750" style="min-height:100px;opacity: 0.2">
     </div>
 </div>
 <script type="text/javascript">
@@ -73,6 +95,16 @@
 
         var ip = 'http://www.hbgzh.com:8080/api';
 //        var ip = 'http://192.168.0.78:8080/api';
+//        var ip = 'http://192.168.0.103:8080/api';
+//        var ip = 'http://172.15.217.120:8080/api';
+
+
+       /*显示隐藏提示*/
+        $(".readTips").on("click",function () {
+            $(".tips").hide();
+            $(".main").show();
+        })
+
 
         var initCity = function () {
             $.ajax({
@@ -134,7 +166,25 @@
                     if (code < 0) {
                         console.log(ret.msg);
                     } else {
-                        classSelect.updateWheels(ret.data);
+                        var wheelData = [];
+                        var oneData = {
+                            "id" :1,
+                            'value' :"高一",
+                            "childs" : []
+                        };var twoData = {
+                            "id" :1,
+                            'value' :"高二",
+                            "childs" : []
+                        };var threeData = {
+                            "id" :1,
+                            'value' :"高三",
+                            "childs" : ret.data
+                        };
+                        wheelData.push(threeData);
+                        wheelData.push(twoData);
+                        wheelData.push(oneData);
+                        console.log(wheelData);
+                        classSelect.updateWheels(wheelData);
                         $(".content").show();
                     }
                 }
@@ -160,14 +210,14 @@
                         param += '?studentname=' + info.studentname;
                         param += '&loginname=' + info.loginname;
                         param += '&loginpwd=' + info.loginpwd;
-                        window.open(encodeURI("success.html" + param)/*,"_self"*/);                    }
+                        window.open(encodeURI("success.html" + param),"_self");                    }
                 }
             });
         })
 
         var citySelect = new MobileSelect({
             trigger: '#citySelDiv',
-            title: '单项选择',
+            title: '地区选择',
             wheels: [
                 {data: selCityData}
             ],
@@ -227,7 +277,7 @@
                 {
                     data: [
                         {
-                            id: '',
+                            id: '1',
                             value: '',
                             childs: [
                                 {id: 'A1', value: ''},
@@ -238,24 +288,49 @@
             ],
             position: [0], //初始化定位 打开时默认选中的哪个 如果不填默认为0
             callback: function (indexArr, data) {
-                var classid = data[0]['id'];
+                console.log(data);
+                var classid = data[1]['id'];
                 console.log("班级id:" + classid);
                 inputData.classid = classid;
                 $("#selClass").addClass("selColor");
+                inputData.nameVal = $('.name-input').val();
                 console.log(inputData);
                 judgeCanDone();
             }
         });
 
-        $(".name-input").bind('change', function () {
+        $(".name-input").bind('keyup','change', function () {
+            $(".startDone").addClass("canDo");
             inputData.nameVal = $('.name-input').val();
-            console.log(inputData);
+            if(inputData.nameVal != '' && inputData.nameVal != null){
+                inputData.codeVal ='';
+                $('.code-input').val('');
+            }
+            judgeCanDone();
+
+        })
+
+        $(".code-input").bind('keyup','change', function () {
+            $(".startDone").addClass("canDo");
+            inputData.codeVal = $('.code-input').val();
+            if(inputData.codeVal != '' && inputData.codeVal != null){
+                $('.name-input').val('');
+                inputData={
+                    cityid:'',
+                    schoolid:'',
+                    classid:'',
+                    nameVal:'',
+                    codeVal:$('.code-input').val()
+                }
+                $("#citySelDiv").text("选择所在的城市").removeClass("selColor");
+                $("#citySelSchool").text("选择学校").removeClass("selColor");
+                $('#selClass').text("选择班级").removeClass("selColor");
+            }
             judgeCanDone();
         })
 
         $(".startDone").on("click", function () {
-
-            if ($(".startDone").hasClass("canDo")) {
+            if ($(".startDone").hasClass("canDo") || (inputData.codeVal != '' && inputData.codeVal != null)) {
                 queryStudentInfo(inputData);
             } else {
 
@@ -263,14 +338,19 @@
         })
 
         var judgeCanDone = function () {
+            console.log(inputData);
             if (inputData.cityid != '' && inputData.schoolid != '' && inputData.classid != ''
-                && inputData.nameVal != '') {
+                && inputData.nameVal != '' && inputData.cityid != null && inputData.schoolid != null && inputData.classid != null
+                && inputData.nameVal != null) {
                 console.log(inputData);
+                $(".startDone").addClass("canDo");
+            } else if(inputData.codeVal != '' && inputData.codeVal != null){
                 $(".startDone").addClass("canDo");
             } else {
                 $(".startDone").removeClass("canDo");
             }
         }
+
     })
 </script>
 
