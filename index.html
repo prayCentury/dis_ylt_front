@@ -94,8 +94,8 @@
         var selCityData = [];
 
         var ip = 'http://www.hbgzh.com:8080/api';
-//        var ip = 'http://192.168.0.78:8080/api';
-//        var ip = 'http://192.168.0.103:8080/api';
+       // var ip = 'http://192.168.0.78:8080/api';
+       // var ip = 'http://192.168.0.103:8080/api';
 //        var ip = 'http://172.15.217.120:8080/api';
 
 
@@ -170,15 +170,15 @@
                         var oneData = {
                             "id" :1,
                             'value' :"高一",
-                            "childs" : []
+                            "childs" : ret.data["1"]
                         };var twoData = {
                             "id" :1,
                             'value' :"高二",
-                            "childs" : []
+                            "childs" : ret.data["2"]
                         };var threeData = {
                             "id" :1,
                             'value' :"高三",
-                            "childs" : ret.data
+                            "childs" : ret.data["3"]
                         };
                         wheelData.push(threeData);
                         wheelData.push(twoData);
@@ -236,7 +236,7 @@
                 $("#citySelSchool").text("选择学校").removeClass("selColor");
                 $('#selClass').text("选择班级").removeClass("selColor");
                 $(".content").hide();
-                querySchool(1102);
+                querySchool(cityid);
             }
         });
 
